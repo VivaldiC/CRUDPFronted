@@ -1,85 +1,90 @@
-import  React, { Component } from  'react';
+import React, { Component } from 'react';
+import NotesService from './NotesService';
 
-import  NotesService  from  './NotesService';
+const notesService = new NotesService();
 
-const  notesService  =  new  NotesService();
-
-class NotesCreateUpdate extends Component{
-
-    constructor(props){
+class NoteCreateUpdate extends Component {
+    constructor(props) {
         super(props);
+
         this.handleSubmit = this.handleSubmit.bind(this);
-    }
+      }
 
-    componentDidMount(){
-        const { match: { params } } =  this.props;
-        if(params  &&  params.pk)
+      componentDidMount(){
+        const { match: { params } } = this.props;
+        if(params && params.id)
         {
-            notesService.getNote(params.pk).then((note)=>{
-                this.refs.noteTitle.value  =  note.noteTitle;
-                this.refs.noteDescription.value  =  note.noteDescription;
-            })
+          notesService.getNote(params.id).then((c)=>{
+            this.refs.task_title.value = c.task_title;
+            this.refs.task_title.value = c.task_title;
+            this.refs.createdAt.value = c.createdAt;
+          })
         }
-    }
+      }
 
-    handleCreate(){
+      handleCreate(){
         notesService.createNote(
-            {
-            "noteTittle":  this.refs.noteTitle.value,
-            "noteDescription":  this.refs.noteDescription.value
-            }).then((result)=>{
-                    alert("Tarea Creada!");
-            }).catch(()=>{
-                    alert('Existe un error, por favor verifique su formulario');
-            });
-    }
-
-    handleUpdate(pk){
-        notesService.createNote(
-            {
-            "pk":  pk,
-            "noteTittle":  this.refs.noteTittle.value,
-            "noteDescription":  this.refs.noteDescription.value,
-            "noteDate": this.refs.noteDate.value,
-            }
-            ).then((result)=>{
-        
-                alert("Tarea Actializada!");
-            }).catch(()=>{
-                alert('Existe un error, por favor verifique su formulario');
-            });
+          {
+            "task_title": this.refs.task_title.value,
+            "description": this.refs.description.value,
+            "createdAt": this.refs.createdAt.value
         }
+        ).then((result)=>{
+          alert("Task created!");
+        }).catch(()=>{
+          alert('There was an error! Please re-check your form.');
+        });
+      }
+      handleUpdate(id){
+        notesService.updateNote(
+          {
+            "id": id,
+            "task_title": this.refs.task_title.value,
+            "description": this.refs.description.value,
+            "createdAt": this.refs.createdAt.value
+        }
+        ).then((result)=>{
+          console.log(result);
+          alert("Task updated!");
+        }).catch(()=>{
+          alert('There was an error! Please re-check your form.');
+        });
+      }
+      handleSubmit(event) {
+        const { match: { params } } = this.props;
 
-    handleSubmit(event) {
-        const { match: { params } } =  this.props;
-        if(params  &&  params.pk){
-            this.handleUpdate(params.pk);
+        if(params && params.id){
+          this.handleUpdate(params.id);
         }
         else
         {
-            this.handleCreate();
+          this.handleCreate();
         }
-        event.preventDefault();
-    }
 
-    render() {
+        event.preventDefault();
+      }
+
+      render() {
         return (
           <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label>
-              Tittle</label>
-              <input className="form-control" type="text" ref='noteTittle' />
+              Task Name:</label>
+              <input className="form-control" type="text" ref='task_title' />
 
             <label>
-              Description:</label>
-              <input className="form-control" type="text" ref='noteDescription'/>
+              Task Description:</label>
+              <input className="form-control" type="text" ref='description'/>
+
+            <label>
+              Task Date</label>
+              <input className="form-control" type="text" ref='createdAt' />
 
             <input className="btn btn-primary" type="submit" value="Submit" />
             </div>
           </form>
         );
-  }
-
+      }
 }
 
-export default NotesCreateUpdate;
+export default NoteCreateUpdate;
