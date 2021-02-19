@@ -16,7 +16,7 @@ const BaseLayout = () => (
   <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div className="navbar-nav">
       <a className="nav-item nav-link" href="/">NOTES</a>
-      <a className="nav-item nav-link" href="/customer">CREATE NOTE</a>
+      <a className="nav-item nav-link" href="/notes">CREATE NOTE</a>
 
     </div>
   </div>
